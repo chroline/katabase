@@ -1,18 +1,18 @@
 package operations
 
-import Interop
+import Collections
 import fs.FileSystem
 
-typealias OperationChannel = Pair<Operation, (Any?) -> Any?>
+typealias OperationChannel = Pair<OperationFn<*>, (Any?) -> Any?>
 
-interface Operation {
-  suspend fun execute(collections: Map<String, Interop<Any>>, fileSystem: FileSystem): Any
-}
+typealias OperationFn<T> = suspend (fileSystem: FileSystem, collections: Collections) -> T
 
-interface DocumentOperation : Operation {
+open class Operation
+
+data class DocumentOperation(
   val file: Pair<String, String>
-}
+) : Operation()
 
-interface CollectionOperation : Operation {
+data class CollectionOperation(
   val collection: String
-}
+) : Operation()

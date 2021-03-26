@@ -18,13 +18,14 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.0.1")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+  implementation("com.beust:klaxon:5.5")
   implementation(kotlin("reflect"))
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
     jvmTarget = "13"
-    freeCompilerArgs += listOf(
+    freeCompilerArgs = freeCompilerArgs + listOf(
       "-Xopt-in=kotlinx.serialization.InternalSerializationApi",
       "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
     )

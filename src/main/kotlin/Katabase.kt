@@ -1,44 +1,64 @@
 @file:Suppress("UNCHECKED_CAST")
 
 import fs.FileSystem
-import kotlinx.coroutines.runBlocking
-import operations.DocumentOperation
-import operations.Operation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import operations.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class Katabase private constructor(
-  val collections: Map<String, Interop<*>>,
-  val fileSystem: FileSystem
+typealias Collections = Map<String, Serializer>
+
+open class Katabase private constructor(
+  val collections: Collections,
+  val fileSystem: FileSystem,
+  val externalScope: CoroutineScope
 ) {
-  private val stream = OperationStream()
+  private val operationFlow = MutableSharedFlow<OperationChannel>()
 
   init {
-    fileSystem.init()
+    fileSystem.initDatabase()
     fileSystem.createCollections(collections.keys)
   }
 
-  fun start() {
-    stream.subscribe {
-      it.second(runBlocking { it.first.execute(collections as Map<String, Interop<Any>>, fileSystem) })
-    }
+  /**
+   * Start processing operations.
+   */
+  fun start() = externalScope.launch {
+    operationFlow.collect { it.second(run { it.first(fileSystem, collections) }) }
   }
 
-  suspend fun <T> pushOperation(operation: Operation): T = suspendCoroutine { cont ->
-    when (operation) {
-      is DocumentOperation ->
-        if (operation.file.first in collections.keys) {
-          stream.push(operation to {
-            cont.resume(it as T)
-          })
-        } else throw CollectionDoesNotExistException(operation.file.first)
+  /**
+   * Push operation to operationFlow.
+   */
+  suspend fun <T> pushOperation(
+    operation: Operation,
+    operationFn: OperationFn<T>
+  ): T = suspendCoroutine { c ->
+    if ((operation is DocumentOperation && operation.file.first in collections.keys) ||
+      (operation is CollectionOperation && operation.collection in collections.keys)
+    ) throw CollectionDoesNotExistException(
+      when (operation) {
+        is DocumentOperation -> operation.file.first
+        is CollectionOperation -> operation.collection
+        else -> error("")
+      }
+    )
+
+    externalScope.launch {
+      operationFlow.emit(operationFn to {
+        c.resume(it as T)
+      })
     }
   }
 
   class Builder {
-    lateinit var collections: Map<String, Interop<*>>
+    lateinit var collections: Collections
     lateinit var fileSystem: FileSystem
+    lateinit var externalScope: CoroutineScope
 
-    fun build() = Katabase(collections, fileSystem)
+    fun build() = Katabase(collections, fileSystem, externalScope)
   }
 }

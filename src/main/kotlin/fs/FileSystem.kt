@@ -1,11 +1,17 @@
 package fs
 
+/**
+ * Filesystem IO with functions used by operations.
+ */
 interface FileSystem {
-  fun init()
+  fun initDatabase()
   fun createCollections(collections: Set<String>)
 
-  suspend fun read(file: Pair<String, String>): ByteArray
-  suspend fun doesExists(file: Pair<String, String>): Boolean
-  suspend fun write(file: Pair<String, String>, data: ByteArray)
-  suspend fun delete(file: Pair<String, String>): Boolean
+  suspend fun readDocument(file: Pair<String, String>): ByteArray
+  suspend fun doesDocumentExist(file: Pair<String, String>): Boolean
+  suspend fun writeDocument(file: Pair<String, String>, data: String)
+  suspend fun deleteDocument(file: Pair<String, String>)
+
+  suspend fun eachOfCollection(collection: String): List<String>
+  suspend fun readAllIn(collection: String): List<ByteArray>
 }

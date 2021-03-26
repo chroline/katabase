@@ -1,28 +1,41 @@
 import fs.JVMFileSystem
-import kotlinx.serialization.Serializable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
+import operations.collection.allInCollection
+import operations.collection.readAllInCollection
+import kotlin.system.measureTimeMillis
 
-@Serializable
 data class Person(val name: String, var posts: List<Int> = listOf()) {
-  companion object : Interop<Person> {
-    override val serializer = DefaultSerializers.protoBuf(Person::class)
-    override val converter: Converter<Person> = DefaultConverters.dataClass(Person::class)
-    /*override val converter: Converter<Person> = object : Converter<Person> {
-        override fun encode(data: Person): Map<Any, Any?> = mapOf("name" to data.name, "age" to data.age)
-        override fun decode(data: Map<Any, Any?>): Person = Person(data["name"] as String, data["age"] as Int)
-      }*/
+  companion object {
+    val serializer = DefaultSerializers.json
   }
 }
 
 fun main() {
-  val builder = Katabase.Builder().apply {
-    collections = mapOf(
-      "people" to Person.Companion
-    )
-    fileSystem = JVMFileSystem("~/db-test")
+
+  runBlocking {
+    val fileSystem = JVMFileSystem(System.getProperty("user.home") + "/db-test")
+    val externalScope = this
+
+    val builder = Katabase.Builder().apply {
+      collections = mapOf("people" to Person.serializer)
+      this.fileSystem = fileSystem
+      this.externalScope = externalScope
+    }
+
+    val katabase = builder.build()
+
+    katabase.start()
+
+    println(measureTimeMillis {
+      println(katabase.allInCollection("people"))
+    })
+    println(measureTimeMillis {
+      val l = katabase.readAllInCollection("people").filter { it["name"] as Int > 5 }
+      println(l)
+    })
+
+    cancel()
   }
-
-  val katabase = builder.build()
-
-  katabase.start()
 }
 
