@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 import fs.FileSystem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,9 +10,9 @@ import kotlin.coroutines.suspendCoroutine
 typealias Collections = Map<String, Serializer>
 
 open class Katabase private constructor(
-  val collections: Collections,
-  val fileSystem: FileSystem,
-  val externalScope: CoroutineScope
+  private val collections: Collections,
+  private val fileSystem: FileSystem,
+  private val externalScope: CoroutineScope
 ) {
   private val operationFlow = MutableSharedFlow<OperationChannel>()
 
@@ -49,6 +47,7 @@ open class Katabase private constructor(
 
     externalScope.launch {
       operationFlow.emit(operationFn to {
+        @Suppress("UNCHECKED_CAST")
         c.resume(it as T)
       })
     }

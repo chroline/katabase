@@ -1,10 +1,11 @@
 plugins {
   kotlin("jvm") version "1.4.31"
   kotlin("plugin.serialization") version "1.4.31"
+  maven
 }
 
-group = "org.example"
-version = "1.0.0"
+group = "com.github.chroline"
+version = "v0"
 
 repositories {
   mavenCentral()
@@ -31,4 +32,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     )
   }
 }
-
