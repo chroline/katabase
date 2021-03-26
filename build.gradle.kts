@@ -25,7 +25,7 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    jvmTarget = "13"
+    jvmTarget = "1.8"
     freeCompilerArgs = freeCompilerArgs + listOf(
       "-Xopt-in=kotlinx.serialization.InternalSerializationApi",
       "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"

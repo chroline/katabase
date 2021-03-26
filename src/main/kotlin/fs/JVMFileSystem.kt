@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
@@ -18,7 +17,7 @@ class JVMFileSystem(private val base: String) : FileSystem {
 
   override fun initDatabase() {
     Files.createDirectories(Paths.get(base))
-    val baseFile = File(Path.of(base).resolve(".katabase-db").toUri())
+    val baseFile = File(Paths.get(base).resolve(".katabase-db").toUri())
 
     if (!baseFile.exists()) {
       baseFile.createNewFile()
@@ -32,7 +31,7 @@ class JVMFileSystem(private val base: String) : FileSystem {
 
   override fun createCollections(collections: Set<String>) =
     collections.forEach {
-      val path = Path.of(base, "content", it)
+      val path = Paths.get(base, "content", it)
       Files.createDirectories(path)
     }
 
@@ -40,7 +39,8 @@ class JVMFileSystem(private val base: String) : FileSystem {
    * Document operations
    */
 
-  val pathOfFile = { file: Pair<String, String> -> Path.of(base, "content", file.first, "${file.second}.json").toUri() }
+  val pathOfFile =
+    { file: Pair<String, String> -> Paths.get(base, "content", file.first, "${file.second}.json").toUri() }
 
   override suspend fun readDocument(file: Pair<String, String>) = withContext(Dispatchers.IO) {
     if (!doesDocumentExist(file)) throw DocumentNotFoundException("${file.first}/${file.second}")
@@ -64,15 +64,15 @@ class JVMFileSystem(private val base: String) : FileSystem {
    * Collection operations
    */
 
-  val pathOfCollection = { collection: String -> Path.of(base, "content", collection).toUri() }
+  val pathOfCollection = { collection: String -> Paths.get(base, "content", collection).toUri() }
 
   override suspend fun eachOfCollection(collection: String) = withContext(Dispatchers.IO) {
     val path = pathOfCollection(collection)
     File(path).walk().iterator().asSequence().filter filter@{
-      if (Path.of(it.path).toUri() == path) return@filter false
-      if (Path.of(it.path).toUri().path.split(".").last() != "json") return@filter false
+      if (Paths.get(it.path).toUri() == path) return@filter false
+      if (Paths.get(it.path).toUri().path.split(".").last() != "json") return@filter false
       true
-    }.map { Path.of(it.path).toUri().path.split(path.path).last().split(".")[0] }.toList()
+    }.map { Paths.get(it.path).toUri().path.split(path.path).last().split(".")[0] }.toList()
   }
 
   override suspend fun readAllIn(collection: String) = withContext(Dispatchers.IO) {
