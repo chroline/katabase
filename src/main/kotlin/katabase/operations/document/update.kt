@@ -1,12 +1,8 @@
-package operations.document
+package katabase.operations.document
 
-import Collections
-import DocumentData
-import DocumentPath
-import Katabase
-import UpdateActionException
-import fs.FileSystem
-import operations.DocumentOperation
+import katabase.*
+import katabase.fs.FileSystem
+import katabase.operations.DocumentOperation
 
 typealias UpdateDocumentData = Map<String, UpdateValue>
 

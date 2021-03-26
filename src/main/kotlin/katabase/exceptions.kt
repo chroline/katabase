@@ -1,3 +1,5 @@
+package katabase
+
 class IncompatibleDatabaseError(s: String) : Error(s)
 
 class DocumentNotFoundException(path: String) : Exception("The document $path was not found.")

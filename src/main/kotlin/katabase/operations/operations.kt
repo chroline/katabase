@@ -1,7 +1,7 @@
-package operations
+package katabase.operations
 
-import Collections
-import fs.FileSystem
+import katabase.Collections
+import katabase.fs.FileSystem
 
 typealias OperationChannel = Pair<OperationFn<*>, (Any?) -> Any?>
 

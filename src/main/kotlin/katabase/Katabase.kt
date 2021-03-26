@@ -1,9 +1,11 @@
-import fs.FileSystem
+package katabase
+
+import katabase.fs.FileSystem
+import katabase.operations.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import operations.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -22,7 +24,7 @@ open class Katabase private constructor(
   }
 
   /**
-   * Start processing operations.
+   * Start processing katabase.operations.
    */
   fun start() = externalScope.launch {
     operationFlow.collect { it.second(run { it.first(fileSystem, collections) }) }

@@ -1,9 +1,9 @@
-package operations.collection
+package katabase.operations.collection
 
-import Collections
-import Katabase
-import fs.FileSystem
-import operations.CollectionOperation
+import katabase.Collections
+import katabase.Katabase
+import katabase.fs.FileSystem
+import katabase.operations.CollectionOperation
 
 /**
  * Returns list of names of all documents in given collection.

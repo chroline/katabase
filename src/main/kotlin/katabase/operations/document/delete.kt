@@ -1,10 +1,10 @@
-package operations.document
+package katabase.operations.document
 
-import Collections
-import DocumentPath
-import Katabase
-import fs.FileSystem
-import operations.DocumentOperation
+import katabase.Collections
+import katabase.DocumentPath
+import katabase.Katabase
+import katabase.fs.FileSystem
+import katabase.operations.DocumentOperation
 
 /**
  * Deletes file at provided [DocumentPath].

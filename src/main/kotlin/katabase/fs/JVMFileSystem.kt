@@ -1,7 +1,7 @@
-package fs
+package katabase.fs
 
-import DocumentNotFoundException
-import IncompatibleDatabaseError
+import katabase.DocumentNotFoundException
+import katabase.IncompatibleDatabaseError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -36,7 +36,7 @@ class JVMFileSystem(private val base: String) : FileSystem {
     }
 
   /**
-   * Document operations
+   * Document katabase.operations
    */
 
   val pathOfFile =
@@ -61,7 +61,7 @@ class JVMFileSystem(private val base: String) : FileSystem {
   }
 
   /**
-   * Collection operations
+   * Collection katabase.operations
    */
 
   val pathOfCollection = { collection: String -> Paths.get(base, "content", collection).toUri() }

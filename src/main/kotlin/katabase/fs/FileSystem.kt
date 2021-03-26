@@ -1,7 +1,7 @@
-package fs
+package katabase.fs
 
 /**
- * Filesystem IO with functions used by operations.
+ * Filesystem IO with functions used by katabase.operations.
  */
 interface FileSystem {
   fun initDatabase()

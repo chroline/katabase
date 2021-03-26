@@ -1,15 +1,15 @@
-package operations.document
+package katabase.operations.document
 
-import Collections
-import DocumentData
-import DocumentPath
-import Katabase
-import fs.FileSystem
-import operations.DocumentOperation
-import operations.OperationFn
+import katabase.Collections
+import katabase.DocumentData
+import katabase.DocumentPath
+import katabase.Katabase
+import katabase.fs.FileSystem
+import katabase.operations.DocumentOperation
+import katabase.operations.OperationFn
 
 /**
- * Reads document at provided DocumentPath, then decodes it using provided serializers. Returns [ByteArray].
+ * Reads document at provided katabase.DocumentPath, then decodes it using provided serializers. Returns [ByteArray].
  */
 fun rawReadDocumentOperation(file: DocumentPath): OperationFn<ByteArray> =
   { fileSystem: FileSystem, _: Collections ->
@@ -17,7 +17,7 @@ fun rawReadDocumentOperation(file: DocumentPath): OperationFn<ByteArray> =
   }
 
 /**
- * Reads document at provided DocumentPath. Returns [ByteArray].
+ * Reads document at provided katabase.DocumentPath. Returns [ByteArray].
  */
 fun readDocumentOperation(file: DocumentPath): OperationFn<DocumentData> =
   { fileSystem: FileSystem, collections: Collections ->

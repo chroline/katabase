@@ -1,10 +1,10 @@
-package operations.collection
+package katabase.operations.collection
 
-import Collections
-import DocumentData
-import Katabase
-import fs.FileSystem
-import operations.CollectionOperation
+import katabase.Collections
+import katabase.DocumentData
+import katabase.Katabase
+import katabase.fs.FileSystem
+import katabase.operations.CollectionOperation
 
 /**
  * Reads all documents in a collection, then decodes it using provided serializer. Returns list of [DocumentData]s.

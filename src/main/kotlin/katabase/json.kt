@@ -1,3 +1,5 @@
+package katabase
+
 import kotlinx.serialization.json.*
 
 fun Any?.toJsonElement(): JsonElement {

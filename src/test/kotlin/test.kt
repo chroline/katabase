@@ -1,8 +1,10 @@
-import fs.JVMFileSystem
+import katabase.DefaultSerializers
+import katabase.Katabase
+import katabase.fs.JVMFileSystem
+import katabase.operations.collection.allInCollection
+import katabase.operations.collection.readAllInCollection
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
-import operations.collection.allInCollection
-import operations.collection.readAllInCollection
 import kotlin.system.measureTimeMillis
 
 data class Person(val name: String, var posts: List<Int> = listOf()) {
