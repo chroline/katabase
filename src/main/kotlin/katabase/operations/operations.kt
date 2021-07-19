@@ -3,9 +3,12 @@ package katabase.operations
 import katabase.Collections
 import katabase.fs.FileSystem
 
-typealias OperationChannel = Pair<OperationFn<*>, (Any?) -> Any?>
-
 typealias OperationFn<T> = suspend (fileSystem: FileSystem, collections: Collections) -> T
+
+interface OperationChannel<T> {
+  val fn: OperationFn<*>
+  fun onComplete(value: T?, e: Exception?);
+}
 
 open class Operation
 

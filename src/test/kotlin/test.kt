@@ -3,6 +3,8 @@ import katabase.Katabase
 import katabase.fs.JVMFileSystem
 import katabase.operations.collection.allInCollection
 import katabase.operations.collection.readAllInCollection
+import katabase.operations.document.createDocument
+import katabase.operations.document.deleteDocument
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import kotlin.system.measureTimeMillis
@@ -30,10 +32,19 @@ fun main() {
     katabase.start()
 
     println(measureTimeMillis {
-      println(katabase.allInCollection("people"))
+      katabase.allInCollection("people").forEach {
+        katabase.deleteDocument("people" to it)
+      }
     })
+
     println(measureTimeMillis {
-      val l = katabase.readAllInCollection("people").filter { it["name"] as Int > 5 }
+      for (i in 1..100) {
+        katabase.createDocument("people" to i.toString(), mapOf("name" to i))
+      }
+    })
+
+    println(measureTimeMillis {
+      val l = katabase.readAllInCollection("people").filter { it["name"] as Int % 7 == 0 }
       println(l)
     })
 
